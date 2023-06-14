@@ -63,7 +63,5 @@ class Levels(commands.Cog):
         level = useri["level"]
         await ctx.send(f"{level} (Didn't design this yet.)")
 
-async def setup(bot:commands.Bot) -> None:
-    await bot.add_cog(
-        Levels(bot)
-)
+async def setup(bot: commands.Bot) -> None:
+    await bot.add_cog(Levels(bot))

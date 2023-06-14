@@ -22,15 +22,15 @@ class CookieChaos(commands.Bot):
         await bot.tree.sync()
 
     async def on_ready(self):
-        channel = self.get_channel(1118514881268826132)
+        channel = await self.fetch_channel(1118514881268826132)
         await channel.send("Bot Has Started.")
         print(f'Logged In As {self.user}')
     
     async def close(self):
-        channel = self.get_channel(1118514881268826132)
+        channel = await self.fetch_channel(1118514881268826132)
         await channel.send("Bot Has Stopped.")
         print(f'Logging Out..')
-        super().close()
+        await super().close()
 
 if __name__ == '__main__':
     bot = CookieChaos()
