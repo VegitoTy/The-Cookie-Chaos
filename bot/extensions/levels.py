@@ -1,6 +1,9 @@
-import discord, pymongo, random
+import discord, pymongo, random, json
 from discord.ext import commands
 from pymongo import MongoClient
+
+with open("./local data/level_exp.json", "r") as f:
+    level_exp = json.load(f)
 
 class Levels(commands.Cog):
     "Levelling"
@@ -28,19 +31,11 @@ class Levels(commands.Cog):
         # xp needed for level up: 5 * (lvl ^ 2) + (50 * lvl) + 100
         # total xp needed for level: total xp of previous level + required xp of previous level
 
-        level_exp = 100; level_totalexp = 0
-
         add = random.randint(5, 15)
         new_exp = useri["exp"] + add
 
         userlevel = useri["level"]
-        loop_levels = 1
-
-        while True:
-            level_totalexp = (5 * ((loop_levels-1) ^ 2) + (50 * (loop_levels-1)) + 100) + level_totalexp
-            loop_levels+=1
-            if loop_levels == userlevel+1:
-                break
+        level_totalexp = level_exp.get(str(userlevel+1))
 
         if new_exp >= level_totalexp:
             userlevel+=1
