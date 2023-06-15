@@ -17,7 +17,7 @@ class Levels(commands.Cog):
         self.levels = self.db["Levels"]
     
     @commands.Cog.listener("on_message")
-    @commands.cooldown(1, 10, commands.BucketType.user)
+    @commands.cooldown(1, 60, commands.BucketType.user)
     async def levelmessages(self, message:discord.Message):
         if message.author.bot:
             return
@@ -32,7 +32,7 @@ class Levels(commands.Cog):
         # xp needed for level up: 5 * (lvl ^ 2) + (50 * lvl) + 100
         # total xp needed for level: total xp of previous level + required xp of previous level
 
-        add = random.randint(5, 15)
+        add = random.randint(15, 25)
         new_exp = useri["exp"] + add
 
         userlevel = useri["level"]
@@ -59,11 +59,12 @@ class Levels(commands.Cog):
         level = useri["level"]
         exp = useri["exp"]
         totalexplvlup = level_exp.get(str(level+1))
+        totalexpcurrentlvl = level_exp.get(str(level))
         expcurrentlevel = totalexplvlup - exp
         expneededlvlup = 5 * (level ^ 2) + (50 * level) + 100
-        percentage = round((exp/totalexplvlup)*100)
+        percentage = ((exp-totalexpcurrentlvl)/expneededlvlup)*100
 
-        background = Editor(Canvas((900,300), color="#141414"))
+        background = Editor(Canvas((900,300), color="#343434"))
         profile_picture = await load_image_async(str(user.avatar.url))
         profile = Editor(profile_picture).resize((150,150)).circle_image()
         poppins = Font.poppins(size=40)
@@ -71,16 +72,19 @@ class Levels(commands.Cog):
 
         card_right_shape = [(600, 0), (750, 300), (900, 300), (900, 0)]
 
-        background.polygon(card_right_shape, color="#FFFFFF")
+        background.polygon(card_right_shape, color="#EADDCA")
         background.paste(profile, (30, 30))
 
-        background.rectangle((30, 220), width=650, height=40, color="#FFFFFF")
-        background.bar((30, 220), max_width=650, height=40, percentage=percentage, color="#FFFFFF", radius=20)
+        background.rectangle((30, 220), width=650, height=40, color="#EADDCA")
+        print(percentage)
+        background.bar((30, 220), max_width=650, height=40, percentage=percentage, color="#6F4E37", radius=0)
 
         background.text((200, 40), user.name, font=poppins, color="#FFFFFF")
 
         background.rectangle((200, 100), width=350, height=2, color="#FFFFFF")
-        background.text((200, 130), f"Level: {level} | XP: {expcurrentlevel}", font=poppins_small, color="#FFFFFF")
+        background.text((200, 130), f"Level: {level} | {expcurrentlevel} Exp Away!", font=poppins_small, color="#FFFFFF")
+        background.text((200, 180), f"Total Exp: {exp}", font=poppins_small, color="#FFFFFF")
+
 
         file = discord.File(fp=background.image_bytes, filename="levelcard.png")
         await ctx.send(file=file)
