@@ -41,7 +41,7 @@ class Levels(commands.Cog):
             userlevel+=1
             await message.channel.send(f"<a:Level_up:1118526299414220891> {message.author.mention} You just leveled up to level {userlevel}!")
         
-        self.levels.update_one(useri, {"_id":user_id, "guild_id":guild_id, "level":userlevel, "exp":new_exp})
+        self.levels.replace_one(useri, {"_id":user_id, "guild_id":guild_id, "level":userlevel, "exp":new_exp})
 
     @commands.command(name='Rank', aliases=['rank'], description=f"Shows Someone's Level\nUsage:- cc,rank [user]")
     async def _rank(self, ctx:commands.Context, user:discord.Member==None):

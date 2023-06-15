@@ -32,6 +32,12 @@ class CookieChaos(commands.Bot):
         print(f'Logging Out..')
         await super().close()
 
+    async def is_owner(self, user:discord.User):
+        if user.id == 766508994390523926:
+            return True
+
+        return await super().is_owner(user)
+
 if __name__ == '__main__':
     bot = CookieChaos()
     bot.run(TOKEN)
