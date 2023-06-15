@@ -2,6 +2,7 @@ pip
 aiodns
 aiohttp
 aiosignal
+asyncio
 async-timeout
 attrs
 Brotli
@@ -14,6 +15,7 @@ colorama
 colorlog
 dnspython
 docopt
+easy_pil
 ed25519
 frozenlist
 discord.py[voice]
@@ -30,4 +32,3 @@ urllib3
 yarg
 yarl
 jishaku @ git+https://github.com/Gorialis/jishaku@master
-asyncio
