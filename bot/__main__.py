@@ -18,6 +18,7 @@ class CookieChaos(commands.Bot):
             if filename.endswith('.py'):
                 extension = f"bot.extensions.{filename[:-3]}"
                 await self.load_extension(extension)
+        await self.load_extension('bot.help.cog')
         await self.load_extension('jishaku')
         await bot.tree.sync()
 
