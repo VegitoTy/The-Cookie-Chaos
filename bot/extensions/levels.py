@@ -82,7 +82,8 @@ class Levels(commands.Cog):
         background.paste(profile, (30, 30))
 
         background.rectangle((30, 220), width=650, height=40, color="#EADDCA")
-        print(percentage)
+        if percentage >= 100:
+            percentage = 95
         background.bar((30, 220), max_width=650, height=40, percentage=percentage, color="#6F4E37", radius=0)
 
         background.text((200, 40), user.name, font=poppins, color="#FFFFFF")
@@ -94,7 +95,57 @@ class Levels(commands.Cog):
 
         file = discord.File(fp=background.image_bytes, filename="levelcard.png")
         await ctx.send(file=file)
+    
+    @commands.group(name='Exp', aliases=["exp"], invoke_without_command=False, case_insensitive=True, description="Add Or Remove Exp From A Member")
+    @commands.has_permissions(administrator=True)
+    async def _exp(self, ctx:commands.Context):
+        pass
 
+    @_exp.command(name="Add", description="Add Exp To A Member")
+    @commands.has_permissions(administrator=True)
+    async def _add(self, ctx:commands.Context, member:discord.Member, amount:int):
+        user_id = member.id
+        guild_id = ctx.guild.id
+
+        useri = self.levels.find_one({"_id":user_id, "guild_id":guild_id})
+        if useri == None:
+            return await ctx.send("I can't find that user in my database.")
+        
+        level = useri["level"]
+        new_exp = useri["exp"] + amount
+        levelsincreased = 0
+        level_totalexp = level_exp.get(str(level+1))
+
+        while new_exp >= level_totalexp:
+            level+=1
+            levelsincreased +=1
+            level_totalexp = level_exp.get(str(level+1))
+            
+        await ctx.send(f"<a:Level_up:1118526299414220891> {member.mention} You just leveled up to level {level}!")
+
+        self.levels.replace_one(useri, {"_id":user_id, "guild_id":guild_id, "level":level, "exp":new_exp})
+
+    @_exp.command(name="Remove", description="Remove Exp Of A Member")
+    @commands.has_permissions(administrator=True)
+    async def _remove(self, ctx:commands.Context, member:discord.Member, amount:int):
+        user_id = member.id
+        guild_id = ctx.guild.id
+
+        useri = self.levels.find_one({"_id":user_id, "guild_id":guild_id})
+        if useri == None:
+            return await ctx.send("I can't find that user in my database.")
+        
+        level = useri["level"]
+        new_exp = useri["exp"] - amount
+        level_totalexp = level_exp.get(str(level-1))
+
+        while new_exp <= level_totalexp:
+            if level == 0:
+                break
+            level-=1
+            level_totalexp = level_exp.get(str(level-1))
+
+        self.levels.replace_one(useri, {"_id":user_id, "guild_id":guild_id, "level":level, "exp":new_exp})
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(

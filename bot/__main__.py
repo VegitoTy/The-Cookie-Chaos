@@ -7,7 +7,7 @@ with open("./secret") as e:
 class CookieChaos(commands.Bot):
     def __init__(self):
         super().__init__(
-            command_prefix=commands.when_mentioned_or("cc,"),
+            command_prefix=commands.when_mentioned_or("cc,", "-"),
             status=discord.Status.idle,
             activity=discord.Activity(type=discord.ActivityType.watching, name="The Cookie Chaos"),
             intents=discord.Intents.all()
@@ -34,7 +34,7 @@ class CookieChaos(commands.Bot):
         await super().close()
 
     async def is_owner(self, user:discord.User):
-        if user.id == 766508994390523926:
+        if user.id == 766508994390523926 or user.id == 889150838658977874:
             return True
 
         return await super().is_owner(user)
